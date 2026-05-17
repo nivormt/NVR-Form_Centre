@@ -189,6 +189,12 @@
             transition: border-color 0.3s var(--ease-premium);
         }
         
+        /* Csökkenő z-index, hogy a felül lévő elemek rétegei ne kerüljenek a lentiek alá (pl. dropdownok) */
+        .form-section:nth-of-type(1) { z-index: 40; }
+        .form-section:nth-of-type(2) { z-index: 30; }
+        .form-section:nth-of-type(3) { z-index: 20; }
+        .form-section:nth-of-type(4) { z-index: 10; }
+
         .form-section:hover { border-color: rgba(26, 34, 56, 0.15); }
 
         .form-section-header {
@@ -466,22 +472,25 @@
             <form id="flightHotelForm" autocomplete="off">
                 
                 <!-- SZEKCIÓ 1: KERESÉS ALAPJAI ÉS FÖLDRAJZI ADATOK -->
-                <div class="form-section reveal-item" style="z-index: 40;">
+                <div class="form-section reveal-item">
                     <div class="form-section-header">
                         <i data-lucide="map-pin"></i>
                         <h3 class="form-section-title">Alapadatok & Helyszín</h3>
                     </div>
 
+                    <!-- 1. Referencia dátum -->
                     <div class="form-group">
                         <label class="form-label" for="refDate">Referencia dátum</label>
                         <input type="date" id="refDate" name="refDate">
                     </div>
 
                     <div class="form-grid-2" style="margin-bottom: 1.5rem;">
+                        <!-- 2. Ország -->
                         <div class="form-group">
                             <label class="form-label" for="country">Ország</label>
                             <input type="text" id="country" name="country" placeholder="pl. Spanyolország">
                         </div>
+                        <!-- 3. Régió -->
                         <div class="form-group">
                             <label class="form-label" for="region">Régió</label>
                             <input type="text" id="region" name="region" placeholder="pl. Andalúzia">
@@ -489,10 +498,12 @@
                     </div>
                     
                     <div class="form-grid-2">
+                        <!-- 4. Régió típusa -->
                         <div class="form-group">
                             <label class="form-label" for="regionType">Régió típusa</label>
                             <input type="text" id="regionType" name="regionType" placeholder="pl. Tengerparti / Hegyvidéki">
                         </div>
+                        <!-- 5. Város -->
                         <div class="form-group">
                             <label class="form-label" for="city">Város</label>
                             <input type="text" id="city" name="city" placeholder="pl. Málaga">
@@ -501,17 +512,19 @@
                 </div>
 
                 <!-- SZEKCIÓ 2: UTAZÁS & REPÜLŐJEGY -->
-                <div class="form-section reveal-item" style="z-index: 30;">
+                <div class="form-section reveal-item">
                     <div class="form-section-header">
                         <i data-lucide="plane-takeoff"></i>
                         <h3 class="form-section-title">Időpontok & Repülőjegy</h3>
                     </div>
 
                     <div class="form-grid-2" style="margin-bottom: 2rem;">
+                        <!-- 6. Utazás kezdete -->
                         <div class="form-group">
                             <label class="form-label" for="startDate">Utazás kezdete</label>
                             <input type="date" id="startDate" name="startDate">
                         </div>
+                        <!-- 7. Utazás vége -->
                         <div class="form-group">
                             <label class="form-label" for="endDate">Utazás vége</label>
                             <input type="date" id="endDate" name="endDate">
@@ -519,27 +532,17 @@
                     </div>
 
                     <div class="form-grid-3">
+                        <!-- 8. Repülőgép ára -->
                         <div class="form-group">
                             <label class="form-label" for="flightPrice">Repülőgép ára (HUF)</label>
-                            <!-- A price-formatter osztály végzi a JS tagolást -->
                             <input type="text" id="flightPrice" name="flightPrice" class="price-formatter" placeholder="100 000">
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="endDate">Utazás vége</label>
-                            <input type="date" id="endDate" name="endDate" required>
-                        </div>
-                    </div>
-
-                    <div class="form-grid-3">
-                        <div class="form-group">
-                            <label class="form-label" for="flightPrice">Repülőgép ára (HUF)</label>
-                            <!-- A price-formatter osztály végzi a JS tagolást -->
-                            <input type="text" id="flightPrice" name="flightPrice" class="price-formatter" placeholder="100 000" required>
-                        </div>
+                        <!-- 9. Reptér -->
                         <div class="form-group">
                             <label class="form-label" for="airport">Reptér</label>
                             <input type="text" id="airport" name="airport" placeholder="pl. BUD">
                         </div>
+                        <!-- 10. Direkt járat -->
                         <div class="form-group">
                             <label class="checkbox-card" id="directFlightCard">
                                 <span class="card-label">
@@ -554,7 +557,7 @@
                 </div>
 
                 <!-- SZEKCIÓ 3: ÚTVONALAK (DINAMIKUS) -->
-                <div class="form-section reveal-item" style="z-index: 20;">
+                <div class="form-section reveal-item">
                     <div class="form-section-header">
                         <i data-lucide="route"></i>
                         <h3 class="form-section-title">Útvonalak</h3>
@@ -566,19 +569,21 @@
                         <div class="dynamic-segment">
                             <div class="segment-header">
                                 <span class="segment-title">1. Útvonal</span>
-                                <!-- Az elsőnél nincs törlés gomb -->
                             </div>
                             
+                            <!-- 12. Légitársaság -->
                             <div class="form-group" style="margin-bottom: 1.5rem;">
                                 <label class="form-label">Légitársaság</label>
                                 <input type="text" name="airlines[]" placeholder="pl. Wizz Air, Ryanair...">
                             </div>
 
                             <div class="form-grid-2" style="margin-bottom: 1.5rem;">
+                                <!-- 13. Indulási város -->
                                 <div class="form-group">
                                     <label class="form-label">Indulási város</label>
                                     <input type="text" name="depCities[]" placeholder="pl. Budapest">
                                 </div>
+                                <!-- 14. Indulási reptér -->
                                 <div class="form-group">
                                     <label class="form-label">Indulási reptér</label>
                                     <input type="text" name="depAirports[]" placeholder="pl. BUD">
@@ -586,10 +591,12 @@
                             </div>
 
                             <div class="form-grid-2">
+                                <!-- 15. Érkezési város -->
                                 <div class="form-group">
                                     <label class="form-label">Érkezési város</label>
                                     <input type="text" name="arrCities[]" placeholder="pl. Málaga">
                                 </div>
+                                <!-- 16. Érkezési reptér -->
                                 <div class="form-group">
                                     <label class="form-label">Érkezési reptér</label>
                                     <input type="text" name="arrAirports[]" placeholder="pl. AGP">
@@ -598,7 +605,7 @@
                         </div>
                     </div>
 
-                    <!-- Új hozzáadása gomb -->
+                    <!-- 18. Új hozzáadása gomb -->
                     <button type="button" id="btnAddSegment" class="btn-nvr btn-nvr--outline">
                         <i data-lucide="plus"></i>
                         <span>Új útvonal hozzáadása</span>
@@ -606,22 +613,25 @@
                 </div>
 
                 <!-- SZEKCIÓ 4: SZÁLLÁS ADATOK -->
-                <div class="form-section reveal-item" style="z-index: 10;">
+                <div class="form-section reveal-item">
                     <div class="form-section-header">
                         <i data-lucide="building-2"></i>
                         <h3 class="form-section-title">Szállás alternatívák</h3>
                     </div>
 
+                    <!-- 19. Éjszakák Diff -->
                     <div class="form-group" style="margin-bottom: 2rem;">
                         <label class="form-label" for="nightsDiff">Éjszakák Diff</label>
                         <input type="number" id="nightsDiff" name="nightsDiff" placeholder="pl. 1">
                     </div>
 
                     <div class="form-grid-2" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px dashed var(--brand-platinum);">
+                        <!-- 20. Olcsóbb szállás Neve -->
                         <div class="form-group">
                             <label class="form-label" for="cheapHotelName">Olcsóbb szállás Neve</label>
                             <input type="text" id="cheapHotelName" name="cheapHotelName" placeholder="Hotel Név">
                         </div>
+                        <!-- 21. Olcsóbb szállás Ára -->
                         <div class="form-group">
                             <label class="form-label" for="cheapHotelPrice">Olcsóbb szállás Ára / 2 fő (HUF)</label>
                             <input type="text" id="cheapHotelPrice" name="cheapHotelPrice" class="price-formatter" placeholder="80 000">
@@ -629,10 +639,12 @@
                     </div>
 
                     <div class="form-grid-2">
+                        <!-- 22. Drágább szállás Neve -->
                         <div class="form-group">
                             <label class="form-label" for="expHotelName">Drágább szállás Neve</label>
                             <input type="text" id="expHotelName" name="expHotelName" placeholder="Hotel Név">
                         </div>
+                        <!-- 23. Drágább szállás Ára -->
                         <div class="form-group">
                             <label class="form-label" for="expHotelPrice">Drágább szállás Ára / 2 fő (HUF)</label>
                             <input type="text" id="expHotelPrice" name="expHotelPrice" class="price-formatter" placeholder="120 000">
