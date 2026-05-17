@@ -806,10 +806,10 @@
                 // Útvonal objektumok létrehozása
                 const routes = airlines.map((airline, index) => ({
                     airline: airline || "",
-                    departure_city: depCities[index] || "",
-                    departure_airport: depAirports[index] || "",
-                    arrival_city: arrCities[index] || "",
-                    arrival_airport: arrAirports[index] || ""
+                    dep_city: depCities[index] || "",
+                    dep_airport: depAirports[index] || "",
+                    arr_city: arrCities[index] || "",
+                    arr_airport: arrAirports[index] || ""
                 }));
 
                 // Helper funkció a számok "tisztításához" (szóközök eltávolítása beküldés előtt)
@@ -820,36 +820,25 @@
 
                 const nightsDiffVal = document.getElementById('nightsDiff').value;
 
+                // Lapos (flat) payload összeállítása a kért sorrendben
                 const payload = {
-                    dates: {
-                        reference: document.getElementById('refDate').value || "",
-                        start: document.getElementById('startDate').value || "",
-                        end: document.getElementById('endDate').value || ""
-                    },
-                    location: {
-                        country: document.getElementById('country').value || "",
-                        region: document.getElementById('region').value || "",
-                        region_type: document.getElementById('regionType').value || "",
-                        city: document.getElementById('city').value || ""
-                    },
-                    flight: {
-                        price: getRawNumber('flightPrice'),
-                        airport: document.getElementById('airport').value || "",
-                        is_direct: document.getElementById('directFlight').checked,
-                        routes: routes
-                    },
-                    accommodation: {
-                        nights_diff: nightsDiffVal ? parseInt(nightsDiffVal, 10) : null,
-                        cheap: {
-                            name: document.getElementById('cheapHotelName').value || "",
-                            price_per_2: getRawNumber('cheapHotelPrice')
-                        },
-                        expensive: {
-                            name: document.getElementById('expHotelName').value || "",
-                            price_per_2: getRawNumber('expHotelPrice')
-                        }
-                    },
-                    submit_timestamp: new Date().toISOString()
+                    ref_date: document.getElementById('refDate').value || "",
+                    country: document.getElementById('country').value || "",
+                    region: document.getElementById('region').value || "",
+                    reg_type: document.getElementById('regionType').value || "",
+                    city: document.getElementById('city').value || "",
+                    travel_start: document.getElementById('startDate').value || "",
+                    travel_end: document.getElementById('endDate').value || "",
+                    flight_price: getRawNumber('flightPrice'),
+                    dest_airport: document.getElementById('airport').value || "",
+                    is_direct: document.getElementById('directFlight').checked,
+                    night_diff: nightsDiffVal ? parseInt(nightsDiffVal, 10) : null,
+                    cheap_stay: document.getElementById('cheapHotelName').value || "",
+                    cheap_price: getRawNumber('cheapHotelPrice'),
+                    expensive_stay: document.getElementById('expHotelName').value || "",
+                    expensive_price: getRawNumber('expHotelPrice'),
+                    flight_routes: routes,
+                    submitted: new Date().toISOString()
                 };
 
                 console.log("Payload:", payload);
