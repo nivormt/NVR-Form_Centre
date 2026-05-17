@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIVOR | Adatközpont - Vezérlőpult</title>
+    
+    <!-- Betűtípusok és Ikonok -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <!-- Lucide Ikonkészlet -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- GSAP Animációs könyvtár -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        /* ============================================
+           NIVOR BRAND SYSTEM & PAGE STYLES
+           ============================================ */
+
+        :root {
+            /* Primary Colors */
+            --brand-prussian-blue: #1A2238;
+            --brand-burnt-peach: #E67E5D;
+            /* Secondary Colors */
+            --brand-platinum: #F5F6F7;
+            --brand-soft-blush: #F8E0E0;
+            --brand-pale-sky: #F1F9FC;
+            --brand-luxury-mono: #0F1420;
+            --brand-bone-white: #FAF9F6;
+            --surface-white: #FFFFFF;
+            /* Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 2rem;
+            --radius-full: 9999px;
+            /* Shadows */
+            --shadow-subtle: 0 4px 12px rgba(26, 34, 56, 0.05);
+            --shadow-elevated: 0 20px 40px rgba(26, 34, 56, 0.05);
+            --shadow-floating: 0 40px 80px rgba(26, 34, 56, 0.12);
+            /* Motion */
+            --ease-premium: cubic-bezier(0.25, 0.8, 0.25, 1);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--brand-platinum);
+            color: var(--brand-prussian-blue);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- BRAND SELECTION & SCROLLBAR --- */
+        ::selection {
+            background: rgba(230, 126, 93, 0.2);
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--brand-platinum); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--brand-burnt-peach);
+            border-radius: 10px;
+            border: 2px solid var(--brand-platinum);
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #d46a4a; }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+            color: var(--brand-prussian-blue);
+            margin-bottom: 1.5rem;
+        }
+        p {
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            color: var(--brand-prussian-blue);
+            opacity: 0.7;
+            max-width: 600px;
+        }
+
+        /* --- LAYOUT WRAPPER --- */
+        .editorial-wrapper {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 6rem 4rem;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* --- SECTION TAG --- */
+        .section-tag {
+            font-size: 0.9rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--brand-burnt-peach);
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-nvr {
+            padding: 1.25rem 2.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            font-family: 'Manrope', sans-serif;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: transform 0.16s var(--ease-premium),
+                        background 0.3s var(--ease-out),
+                        box-shadow 0.3s var(--ease-out),
+                        border-color 0.3s var(--ease-out);
+            text-decoration: none;
+        }
+        .btn-nvr:hover { transform: translateY(-4px); }
+        .btn-nvr:active { transform: scale(0.97); }
+
+        /* Compact Dashboard Button (A kért "kis gomb") */
+        .btn-nvr--compact {
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            background: var(--surface-white);
+            color: var(--brand-prussian-blue);
+            border: 1px solid rgba(26, 34, 56, 0.08);
+            box-shadow: var(--shadow-subtle);
+            justify-content: flex-start; /* Balra igazított tartalom */
+        }
+        .btn-nvr--compact:hover {
+            box-shadow: var(--shadow-elevated);
+            border-color: rgba(230, 126, 93, 0.3); /* Halvány barack keret hoverkor */
+        }
+        
+        .btn-nvr--compact .lucide {
+            color: var(--brand-burnt-peach);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* --- PAGE SPECIFIC LAYOUT --- */
+        .dashboard-header {
+            margin-bottom: 4rem;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Animációs kezdőállapot */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        /* --- RESPONSIVE TABLET (≤1024px) --- */
+        @media (max-width: 1024px) {
+            .editorial-wrapper { padding: 4rem 2rem; }
+            h1 { font-size: 2.75rem; line-height: 1.1; }
+            p { font-size: 1.1rem; }
+        }
+
+        /* --- RESPONSIVE MOBILE (≤768px) --- */
+        @media (max-width: 768px) {
+            .editorial-wrapper { padding: 3rem 1.5rem; }
+            h1 { font-size: 2rem; line-height: 1.15; }
+            p { font-size: 1rem; }
+            .dashboard-header { margin-bottom: 3rem; }
+            
+            .modules-grid {
+                grid-template-columns: 1fr; /* 1 oszlopos rács */
+            }
+            
+            .btn-nvr {
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-nvr--compact {
+                padding: 1.25rem 1.5rem; /* Nagyobb érintési felület (touch target) */
+                justify-content: flex-start; /* Mobilon is maradjon balra igazítva az átláthatóságért */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="editorial-wrapper">
+        
+        <!-- Fejléc rész -->
+        <header class="dashboard-header reveal-item">
+            <span class="section-tag">NIVOR Adatközpont</span>
+            <h1>Fő vezérlőpult</h1>
+            <p>Válassz az alábbi modulok közül az adatok megfelelő rögzítéséhez.</p>
+        </header>
+
+        <!-- Modulok rácsos elrendezése -->
+        <main class="modules-grid">
+            
+            <!-- 1. Kért gomb: Social Media -->
+            <a href="DB-Travel_Related_Ideas_From_Social.html" class="btn-nvr btn-nvr--compact reveal-item">
+                <i data-lucide="share-2"></i>
+                <span>Travel Related Ideas From Social Media</span>
+            </a>
+
+            <!-- 2. Helykitöltő modul a kontextus kedvéért -->
+            <a href="#" class="btn-nvr btn-nvr--compact reveal-item">
+                <i data-lucide="plane-takeoff"></i>
+                <span>Repülőjegy Árfigyelő Rendszer</span>
+            </a>
+
+            <!-- 3. Helykitöltő modul a kontextus kedvéért -->
+            <a href="#" class="btn-nvr btn-nvr--compact reveal-item">
+                <i data-lucide="hotel"></i>
+                <span>Szálláshely Kívánságlisták</span>
+            </a>
+
+            <!-- 4. Helykitöltő modul a kontextus kedvéért -->
+            <a href="#" class="btn-nvr btn-nvr--compact reveal-item">
+                <i data-lucide="file-text"></i>
+                <span>Ügyfél Preferencia Űrlapok</span>
+            </a>
+            
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Lucide ikonok renderelése
+            lucide.createIcons();
+
+            // 2. Prémium belépési animációk (Staggered Entrance)
+            // A fejléc és a gombok finoman, egymás után úsznak be a képernyőre
+            gsap.to(".reveal-item", {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1, // 100ms késleltetés az elemek között
+                ease: "power3.out",
+                delay: 0.2
+            });
+
+            // Gombok kattintási visszajelzése (Micro-interaction)
+            const buttons = document.querySelectorAll('.btn-nvr');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // Finom skálázás effekt kattintáskor
+                    gsap.fromTo(this, 
+                        { scale: 0.97 }, 
+                        { scale: 1, duration: 0.4, ease: "elastic.out(1, 0.5)" }
+                    );
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIVOR | Travel Idea Collector</title>
+    
+    <!-- Betűtípusok és Ikonok -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Ikonkészlet (A vezérlőpulthoz igazodva) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- GSAP Animációs könyvtár -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <style>
+        /* ============================================
+           NIVOR BRAND SYSTEM & PAGE STYLES
+           ============================================ */
+
+        :root {
+            /* Primary Colors */
+            --brand-prussian-blue: #1A2238;
+            --brand-burnt-peach: #E67E5D;
+            /* Secondary Colors */
+            --brand-platinum: #F5F6F7;
+            --brand-soft-blush: #F8E0E0;
+            --brand-pale-sky: #F1F9FC;
+            --brand-luxury-mono: #0F1420;
+            --brand-bone-white: #FAF9F6;
+            --surface-white: #FFFFFF;
+            /* Radius */
+            --radius-sm: 0.5rem;
+            --radius-md: 1rem;
+            --radius-lg: 2rem;
+            --radius-full: 9999px;
+            /* Shadows */
+            --shadow-subtle: 0 4px 12px rgba(26, 34, 56, 0.05);
+            --shadow-elevated: 0 20px 40px rgba(26, 34, 56, 0.05);
+            --shadow-floating: 0 40px 80px rgba(26, 34, 56, 0.12);
+            /* Motion */
+            --ease-premium: cubic-bezier(0.25, 0.8, 0.25, 1);
+            --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* --- GLOBAL RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background-color: var(--brand-platinum);
+            color: var(--brand-prussian-blue);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- BRAND SELECTION & SCROLLBAR --- */
+        ::selection {
+            background: rgba(230, 126, 93, 0.2);
+            color: inherit;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--brand-platinum); }
+        ::-webkit-scrollbar-thumb {
+            background: var(--brand-burnt-peach);
+            border-radius: 10px;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            color: var(--brand-prussian-blue);
+            margin-bottom: 0.5rem;
+        }
+        p {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: var(--brand-prussian-blue);
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+        .section-tag {
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--brand-burnt-peach);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* --- LAYOUT WRAPPER --- */
+        .page-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-nvr {
+            width: 100%;
+            padding: 1.25rem 2.5rem;
+            border-radius: var(--radius-full);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            font-family: 'Manrope', sans-serif;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            background: var(--brand-burnt-peach);
+            color: white;
+            box-shadow: var(--shadow-subtle);
+            transition: transform 0.16s var(--ease-premium),
+                        background 0.3s var(--ease-out),
+                        box-shadow 0.3s var(--ease-out),
+                        opacity 0.3s var(--ease-out);
+            text-decoration: none;
+            margin-top: 1.5rem;
+        }
+        .btn-nvr:hover { transform: translateY(-4px); box-shadow: var(--shadow-elevated); }
+        .btn-nvr:active { transform: scale(0.97); }
+
+        .btn-nvr .lucide {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Compact Dashboard Button (Vissza gomb) */
+        .btn-nvr--compact {
+            width: auto;
+            display: inline-flex;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.75rem;
+            background: transparent;
+            color: var(--brand-prussian-blue);
+            box-shadow: none;
+            margin-top: 0;
+            margin-bottom: 2rem;
+            justify-content: flex-start;
+            border: 1px solid rgba(26, 34, 56, 0.1);
+            border-radius: var(--radius-full);
+        }
+        .btn-nvr--compact:hover {
+            background: var(--surface-white);
+            box-shadow: var(--shadow-subtle);
+            transform: translateY(-2px);
+        }
+        .btn-nvr--compact .lucide { color: var(--brand-prussian-blue); width: 16px; height: 16px; }
+
+        /* --- FORM CONTAINER & SECTIONS --- */
+        .form-container {
+            background: var(--surface-white);
+            border-radius: var(--radius-lg);
+            padding: 3.5rem 4rem;
+            box-shadow: var(--shadow-elevated);
+            width: 100%;
+        }
+
+        /* Új tagolás blokkokra */
+        .form-section {
+            position: relative; /* Hozzáadva a z-index megfelelő működéséhez */
+            border: 1px solid var(--brand-platinum);
+            border-radius: var(--radius-md);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            background: var(--surface-white);
+            transition: border-color 0.3s var(--ease-premium);
+        }
+
+        /* Z-index javítás: Csökkenő z-index, hogy a felső szekciók menüje rá tudjon takarni az alatta lévőkre */
+        .form-section:nth-of-type(1) { z-index: 40; }
+        .form-section:nth-of-type(2) { z-index: 30; }
+        .form-section:nth-of-type(3) { z-index: 20; }
+        .form-section:nth-of-type(4) { z-index: 10; }
+        
+        .form-section:hover {
+            border-color: rgba(26, 34, 56, 0.15);
+        }
+
+        /* Kiemelt szekció (Scrape) */
+        .form-section--accent {
+            background: var(--brand-pale-sky);
+            border-color: transparent;
+        }
+
+        .form-section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--brand-platinum);
+        }
+
+        .form-section--accent .form-section-header {
+            border-bottom-color: rgba(26, 34, 56, 0.05);
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--brand-prussian-blue);
+        }
+
+        .form-section-header .lucide {
+            color: var(--brand-burnt-peach);
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- DESKTOP GRIDS --- */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: end;
+        }
+        
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            align-items: end;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .form-grid-2 .form-group, 
+        .form-grid-3 .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-grid-2 .checkbox-card,
+        .checkbox-grid .checkbox-card {
+            margin-bottom: 0;
+            height: 100%;
+        }
+
+        /* --- INPUT STYLES --- */
+        label.form-label {
+            font-size: 0.75rem;
+            font-weight: 800;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 0.2rem;
+            color: var(--brand-prussian-blue);
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        textarea {
+            width: 100%;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--brand-prussian-blue);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--brand-platinum);
+            padding: 0.6rem 0;
+            outline: none;
+            border-radius: 0;
+            transition: border-color 0.3s var(--ease-premium);
+        }
+
+        input[type="text"]:focus, 
+        input[type="number"]:focus, 
+        textarea:focus {
+            border-bottom-color: var(--brand-burnt-peach);
+        }
+
+        .form-section--accent input,
+        .form-section--accent textarea {
+            border-bottom-color: rgba(26, 34, 56, 0.1);
+        }
+
+        textarea {
+            resize: none;
+            height: 38px;
+            min-height: 38px;
+            overflow-y: hidden;
+            line-height: 1.4;
+            padding: 0.35rem 0;
+            transition: border-color 0.3s var(--ease-premium);
+        }
+
+        /* --- CUSTOM SELECT (PREMIUM DROPDOWN) --- */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        /* A natív select-et elrejtjük, de bent hagyjuk a DOM-ban a validáció miatt */
+        .custom-select-wrapper select {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            height: 100%;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+        }
+
+        .custom-select-trigger {
+            width: 100%;
+            font-family: 'Manrope', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--brand-prussian-blue);
+            background: transparent;
+            border-bottom: 2px solid var(--brand-platinum);
+            padding: 0.6rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: border-color 0.3s var(--ease-premium);
+        }
+
+        .custom-select-trigger:hover,
+        .custom-select-wrapper.open .custom-select-trigger {
+            border-bottom-color: var(--brand-burnt-peach);
+        }
+
+        .custom-select-text {
+            /* Alapból olyan mintha egy placeholder lenne, ezt JS-ből frissítjük */
+            opacity: 0.8; 
+        }
+
+        .custom-select-trigger .lucide {
+            width: 18px;
+            height: 18px;
+            color: var(--brand-prussian-blue);
+            opacity: 0.6;
+            transition: transform 0.3s var(--ease-premium), color 0.3s var(--ease-premium);
+        }
+
+        .custom-select-wrapper.open .custom-select-trigger .lucide {
+            transform: rotate(180deg);
+            color: var(--brand-burnt-peach);
+            opacity: 1;
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--surface-white);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-floating);
+            border: 1px solid rgba(26, 34, 56, 0.05);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s var(--ease-premium);
+            overflow: hidden;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .custom-select-wrapper.open .custom-select-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .custom-option {
+            padding: 0.9rem 1.2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--brand-prussian-blue);
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            transition: all 0.2s var(--ease-premium);
+        }
+
+        .custom-option:not(:last-child) {
+            border-bottom: 1px solid rgba(26, 34, 56, 0.03);
+        }
+
+        .custom-option:hover, 
+        .custom-option.selected {
+            background: var(--brand-pale-sky);
+            color: var(--brand-burnt-peach);
+            border-left-color: var(--brand-burnt-peach);
+        }
+
+        .custom-option.selected {
+            font-weight: 800;
+        }
+
+        /* --- CHECKBOX CARDS --- */
+        .checkbox-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--brand-platinum);
+            padding: 1.2rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.3s var(--ease-premium);
+            border: 1px solid transparent;
+            margin-bottom: 0.8rem;
+        }
+
+        .form-section--accent .checkbox-card {
+            background: var(--surface-white);
+        }
+
+        .checkbox-card input[type="checkbox"] { display: none; }
+
+        .checkbox-card .card-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .checkbox-card .card-label .lucide {
+            color: var(--brand-prussian-blue);
+            opacity: 0.5;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checkbox-card .custom-indicator {
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(26, 34, 56, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s var(--ease-premium);
+            background: var(--surface-white);
+        }
+
+        .checkbox-card .custom-indicator .lucide {
+            color: white;
+            width: 14px;
+            height: 14px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.2s var(--ease-premium);
+        }
+
+        /* Checked States */
+        .checkbox-card.checked {
+            border-color: rgba(230, 126, 93, 0.4);
+            background: rgba(230, 126, 93, 0.05);
+            box-shadow: var(--shadow-subtle);
+        }
+        .checkbox-card.checked .card-label .lucide.icon-accent {
+            color: var(--brand-burnt-peach);
+            opacity: 1;
+        }
+        .checkbox-card.checked .custom-indicator {
+            background: var(--brand-burnt-peach);
+            border-color: var(--brand-burnt-peach);
+        }
+        .checkbox-card.checked .custom-indicator .lucide {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- CONDITIONAL FIELD --- */
+        .conditional-field {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.4s var(--ease-premium);
+            padding-left: 1rem;
+            border-left: 2px solid var(--brand-burnt-peach);
+            margin-top: 0.5rem;
+        }
+
+        .conditional-field.active {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- TOAST NOTIFICATION --- */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translate(-50%, 150%);
+            background: var(--brand-luxury-mono);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: var(--shadow-floating);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: transform 0.5s var(--ease-premium);
+            z-index: 9999;
+            width: max-content;
+            max-width: 90vw;
+        }
+
+        .toast-notification.show {
+            transform: translate(-50%, 0);
+        }
+
+        .toast-notification .lucide {
+            color: #4BB543;
+        }
+
+        /* Animációs kezdőállapot */
+        .reveal-item { opacity: 0; transform: translateY(20px); }
+
+        /* Responsive Mobile */
+        @media (max-width: 768px) {
+            body { padding: 1.5rem 1rem; }
+            .form-container { padding: 2.5rem 1.5rem; }
+            
+            .form-section { padding: 1.5rem; margin-bottom: 1.5rem; }
+            
+            .form-grid-2, 
+            .form-grid-3 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-grid-2 .form-group, 
+            .form-grid-3 .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-grid-2 .checkbox-card {
+                margin-bottom: 0.8rem;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+            }
+            
+            .checkbox-grid .checkbox-card {
+                margin-bottom: 0;
+                border-radius: var(--radius-sm);
+                border-bottom: 1px solid transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        
+        <!-- Vissza a vezérlőpulthoz gomb -->
+        <a href="index.html" class="btn-nvr btn-nvr--compact reveal-item">
+            <i data-lucide="arrow-left"></i>
+            <span>Vissza a vezérlőpultra</span>
+        </a>
+
+        <!-- Űrlap konténer -->
+        <div class="form-container">
+            <div class="reveal-item" style="margin-bottom: 2.5rem;">
+                <span class="section-tag">NIVOR Hub</span>
+                <h1>Utazási Ötletek</h1>
+                <p style="margin-bottom: 0;">Küldd be a közösségi médiában talált inspirációkat közvetlenül a tervezőrendszerbe.</p>
+            </div>
+
+            <form id="travelIdeaForm" autocomplete="off">
+                
+                <!-- SZEKCIÓ 1: ALAPADATOK -->
+                <div class="form-section reveal-item">
+                    <div class="form-section-header">
+                        <i data-lucide="info"></i>
+                        <h3 class="form-section-title">Alapadatok</h3>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <!-- Egyedi (Custom) Dropdown Menü -->
+                        <div class="form-group">
+                            <label class="form-label" for="category">Kategória</label>
+                            
+                            <div class="custom-select-wrapper" id="customCategorySelect">
+                                <!-- A natív select továbbra is működik a háttérben, de el van rejtve -->
+                                <select id="category" name="category" required>
+                                    <option value="" disabled selected>Válassz kategóriát...</option>
+                                    <option value="Destination">Destination</option>
+                                    <option value="Program">Program</option>
+                                    <option value="Visit Instead">Visit Instead</option>
+                                    <option value="Tips and Tricks">Tips and Tricks</option>
+                                </select>
+
+                                <!-- Az új, egyedileg formázott felület -->
+                                <div class="custom-select-trigger">
+                                    <span class="custom-select-text">Válassz kategóriát...</span>
+                                    <i data-lucide="chevron-down"></i>
+                                </div>
+                                
+                                <div class="custom-select-options">
+                                    <div class="custom-option" data-value="Destination">Destination</div>
+                                    <div class="custom-option" data-value="Program">Program</div>
+                                    <div class="custom-option" data-value="Visit Instead">Visit Instead</div>
+                                    <div class="custom-option" data-value="Tips and Tricks">Tips and Tricks</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-card" id="stealableCard">
+                                <span class="card-label">
+                                    <i data-lucide="zap" class="icon-accent"></i>
+                                    Stealable ötlet
+                                </span>
+                                <div class="custom-indicator">
+                                    <i data-lucide="check"></i>
+                                </div>
+                                <input type="checkbox" id="stealable" name="stealable">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SZEKCIÓ 2: FÖLDRAJZI ADATOK -->
+                <div class="form-section reveal-item">
+                    <div class="form-section-header">
+                        <i data-lucide="map-pin"></i>
+                        <h3 class="form-section-title">Földrajzi adatok</h3>
+                    </div>
+
+                    <div class="form-grid-3">
+                        <div class="form-group">
+                            <label class="form-label" for="country">Ország</label>
+                            <input type="text" id="country" name="country" placeholder="pl. Olaszország">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="region">Régió</label>
+                            <input type="text" id="region" name="region" placeholder="pl. Toszkána">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="city">Város</label>
+                            <input type="text" id="city" name="city" placeholder="pl. Firenze">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SZEKCIÓ 3: RÉSZLETEK ÉS FORRÁS -->
+                <div class="form-section reveal-item">
+                    <div class="form-section-header">
+                        <i data-lucide="link"></i>
+                        <h3 class="form-section-title">Forrás & Megjegyzés</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="url">Forrás URL</label>
+                        <input type="text" id="url" name="url" placeholder="https://instagram.com/..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="comment">Megjegyzés</label>
+                        <textarea id="comment" name="comment" placeholder="Saját gondolatok, miért tetszett meg..."></textarea>
+                    </div>
+                </div>
+
+                <!-- SZEKCIÓ 4: ADATKINYERÉS (SCRAPE) -->
+                <div class="form-section form-section--accent reveal-item">
+                    <div class="form-section-header">
+                        <i data-lucide="download-cloud"></i>
+                        <h3 class="form-section-title">Automatikus Adatkinyerés</h3>
+                    </div>
+                    
+                    <div class="checkbox-grid">
+                        <label class="checkbox-card" id="scrapePostCard">
+                            <span class="card-label">
+                                <i data-lucide="file-text"></i> Post tartalom
+                            </span>
+                            <div class="custom-indicator"><i data-lucide="check"></i></div>
+                            <input type="checkbox" id="scrapePost" name="scr_content">
+                        </label>
+
+                        <label class="checkbox-card" id="scrapeTranscriptCard">
+                            <span class="card-label">
+                                <i data-lucide="subtitles"></i> Transcript
+                            </span>
+                            <div class="custom-indicator"><i data-lucide="check"></i></div>
+                            <input type="checkbox" id="scrapeTranscript" name="scr_transript">
+                        </label>
+
+                        <label class="checkbox-card" id="scrapeCommentCard">
+                            <span class="card-label">
+                                <i data-lucide="message-square-quote"></i> Hozzászólások
+                            </span>
+                            <div class="custom-indicator"><i data-lucide="check"></i></div>
+                            <input type="checkbox" id="scrapeComment" name="scr_comment">
+                        </label>
+                    </div>
+
+                    <!-- Feltételes mező -->
+                    <div class="conditional-field" id="conditionalCommentField">
+                        <div class="form-group" style="margin-top: 1rem; margin-bottom: 0;">
+                            <label class="form-label" for="commentCount">Lekérendő kommentek száma</label>
+                            <input type="number" id="commentCount" name="scr_comment_n" min="1" max="500" placeholder="pl. 50">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Beküldés gomb -->
+                <button type="submit" class="btn-nvr reveal-item">
+                    <span>Küldés a rendszerbe</span>
+                    <i data-lucide="send"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Értesítés (Toast) -->
+    <div class="toast-notification" id="toast">
+        <i data-lucide="check-circle-2"></i>
+        <span id="toastMessage">Sikeresen továbbítva az n8n rendszerbe!</span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Lucide ikonok inicializálása
+            lucide.createIcons();
+
+            // 2. Prémium belépési animáció blokkonként
+            gsap.to(".reveal-item", {
+                y: 0,
+                opacity: 1,
+                duration: 0.6,
+                stagger: 0.1, 
+                ease: "power3.out",
+                delay: 0.1
+            });
+
+            // 3. Custom Dropdown Logika
+            const customSelectWrapper = document.getElementById('customCategorySelect');
+            const customSelectTrigger = customSelectWrapper.querySelector('.custom-select-trigger');
+            const customSelectText = customSelectWrapper.querySelector('.custom-select-text');
+            const customOptions = customSelectWrapper.querySelectorAll('.custom-option');
+            const nativeSelect = document.getElementById('category');
+
+            // Nyitás / Zárás
+            customSelectTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                customSelectWrapper.classList.toggle('open');
+            });
+
+            // Opció kiválasztása
+            customOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const value = option.dataset.value;
+                    
+                    // Szinkronizáljuk a háttérben futó natív select-et
+                    nativeSelect.value = value;
+                    
+                    // Frissítjük a látható UI-t
+                    customSelectText.innerText = option.innerText;
+                    customSelectText.style.opacity = "1"; // Levesszük a "placeholder" halványítást
+                    
+                    // Kiemelés (selected osztály) cseréje
+                    customOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    
+                    // Menü bezárása
+                    customSelectWrapper.classList.remove('open');
+                });
+            });
+
+            // Ha bárhova máshova kattintunk a lapon, záruljon be a dropdown
+            document.addEventListener('click', () => {
+                customSelectWrapper.classList.remove('open');
+            });
+
+            // 4. Checkbox kártyák logikája
+            const setupCheckboxCard = (cardId, inputId, onChangeCallback) => {
+                const card = document.getElementById(cardId);
+                const input = document.getElementById(inputId);
+                
+                input.addEventListener('change', () => {
+                    if(input.checked) {
+                        card.classList.add('checked');
+                    } else {
+                        card.classList.remove('checked');
+                    }
+                    if(onChangeCallback) onChangeCallback(input.checked);
+                });
+            };
+
+            setupCheckboxCard('stealableCard', 'stealable');
+            setupCheckboxCard('scrapePostCard', 'scrapePost');
+            setupCheckboxCard('scrapeTranscriptCard', 'scrapeTranscript');
+            
+            // Feltételes mező vezérlése
+            setupCheckboxCard('scrapeCommentCard', 'scrapeComment', (isChecked) => {
+                const conditionalField = document.getElementById('conditionalCommentField');
+                const commentCountInput = document.getElementById('commentCount');
+                
+                if(isChecked) {
+                    conditionalField.classList.add('active');
+                    commentCountInput.setAttribute('required', 'true');
+                } else {
+                    conditionalField.classList.remove('active');
+                    commentCountInput.removeAttribute('required');
+                    commentCountInput.value = '';
+                }
+            });
+
+            // Auto-resize Textarea
+            const commentTextarea = document.getElementById('comment');
+            commentTextarea.addEventListener('input', function() {
+                this.style.height = '38px';
+                if (this.scrollHeight > 38) {
+                    this.style.height = this.scrollHeight + 'px';
+                }
+            });
+
+            // Toast Értesítési funkció
+            const showToast = (message, isError = false) => {
+                const toast = document.getElementById('toast');
+                const icon = toast.querySelector('svg'); 
+                document.getElementById('toastMessage').innerText = message;
+                
+                if(isError) {
+                    icon.setAttribute('data-lucide', 'alert-circle');
+                    icon.style.color = "#D9534F";
+                } else {
+                    icon.setAttribute('data-lucide', 'check-circle-2');
+                    icon.style.color = "#4BB543";
+                }
+                lucide.createIcons(); 
+                
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3500);
+            };
+
+            // Form beküldés
+            document.getElementById('travelIdeaForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const submitButton = e.target.querySelector('.btn-nvr');
+                const btnText = submitButton.querySelector('span');
+                const originalText = btnText.innerText;
+                
+                submitButton.disabled = true;
+                submitButton.style.opacity = "0.7";
+                btnText.innerText = "Küldés folyamatban...";
+
+                const payload = {
+                    category: document.getElementById('category').value,
+                    stealable: document.getElementById('stealable').checked,
+                    country: document.getElementById('country').value,
+                    region: document.getElementById('region').value,
+                    city: document.getElementById('city').value,
+                    url: document.getElementById('url').value,
+                    comment: document.getElementById('comment').value,
+                    scr_content: document.getElementById('scrapePost').checked,
+                    scr_transript: document.getElementById('scrapeTranscript').checked,
+                    scr_comment: document.getElementById('scrapeComment').checked,
+                    scr_comment_n: document.getElementById('scrapeComment').checked ? parseInt(document.getElementById('commentCount').value) || 0 : 0,
+                    submit_timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const response = await fetch('https://n8n.nivor.hu/webhook/TravelRelatedIdeaFromSocial', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        showToast('Ötlet sikeresen elmentve a NIVOR rendszerbe!');
+                        
+                        // Űrlap és elemek alaphelyzetbe állítása
+                        document.getElementById('travelIdeaForm').reset();
+                        document.querySelectorAll('.checkbox-card').forEach(card => card.classList.remove('checked'));
+                        document.getElementById('conditionalCommentField').classList.remove('active');
+                        commentTextarea.style.height = '38px';
+
+                        // ÚJ: A Custom Select visszállítása alaphelyzetbe (Placeholder)
+                        customSelectText.innerText = 'Válassz kategóriát...';
+                        customSelectText.style.opacity = "0.8";
+                        customOptions.forEach(opt => opt.classList.remove('selected'));
+
+                    } else {
+                        showToast('Szerver hiba történt a küldés során.', true);
+                    }
+                } catch (error) {
+                    showToast('Hálózati hiba. Nem sikerült elérni a webhookot.', true);
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.style.opacity = "1";
+                    btnText.innerText = originalText;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
